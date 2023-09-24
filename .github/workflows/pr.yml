@@ -1,0 +1,9 @@
+on:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build-test:
+    uses: catnapz/cnc.data/.github/workflows/build-test.template.yml@main
+    secrets: inherit
