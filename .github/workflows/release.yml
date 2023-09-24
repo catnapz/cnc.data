@@ -35,7 +35,7 @@ jobs:
       VERSION: ${{needs.get-version.outputs.VERSION}}
     steps:
     - name: Checkout
-      uses: actions/checkout@v2    
+      uses: actions/checkout@v4   
     - name: Pack
       run: dotnet pack ./Cnc.Data --configuration Release /p:Version=${VERSION} --output .
     - name: Add Source
