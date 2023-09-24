@@ -2,6 +2,15 @@ name: Build and Test
 
 on:
   workflow_call:
+    inputs:
+      CONFIG:
+        required: false
+        type: string
+        default: Debug
+      VERSION:
+        required: false
+        type: string
+        default: 0.0.0
 
 jobs:
   build:
@@ -15,7 +24,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration ${{ inputs.CONFIG }} /p:Version=${{ inputs.VERSION }}
     - name: Test
-      run: dotnet test --no-restore --configuration Release --no-build
+      run: dotnet test --no-restore --configuration ${{ inputs.CONFIG }} /p:Version=${{ inputs.VERSION }} --no-build
       
