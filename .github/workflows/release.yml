@@ -1,4 +1,5 @@
 # Release is triggered on tag
+name: Release
 
 on:
   push:
@@ -6,7 +7,6 @@ on:
     - "v[0-9]+.[0-9]+.[0-9]+"
     
 jobs:
-
   get-version:
     runs-on: ubuntu-latest
     outputs:
@@ -30,10 +30,10 @@ jobs:
     needs: 
      - get-version
      - build-test
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VERSION: ${{needs.get-version.outputs.VERSION}}
     steps:
-    - env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION: ${{needs.get-version.outputs.VERSION}}
     - name: Checkout
       uses: actions/checkout@v2    
     - name: Pack
