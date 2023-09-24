@@ -1,0 +1,42 @@
+# Release is triggered on tag
+
+on:
+  push:
+    tags:
+    - "v[0-9]+.[0-9]+.[0-9]+"
+    
+jobs:
+
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.set_version.outputs.VERSION }}
+    steps:
+        - name: Set Version Output
+          id: set_version
+          run: |
+            echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> "$GITHUB_OUTPUT"
+            
+  build-test:
+    needs: get-version
+    uses: catnapz/cnc.data/.github/workflows/build-test.template.yml@main
+    secrets: inherit
+    with:
+      CONFIG: Release
+      VERSION: ${{ needs.get-version.outputs.VERSION }}
+    
+  publish:
+    runs-on: ubuntu-latest
+    needs: 
+     - get-version
+     - build-test
+    steps:
+    - env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: ${{needs.get-version.outputs.VERSION}}
+    - name: Checkout
+      uses: actions/checkout@v2    
+    - name: Pack
+      run: dotnet pack ./Cnc.Data --configuration Release /p:Version=${VERSION} --output .
+    - name: Push
+      run: dotnet nuget push Cnc.Data.${VERSION}.nupkg --source github --api-key ${GITHUB_TOKEN}
