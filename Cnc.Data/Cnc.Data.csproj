@@ -4,6 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>Cnc.Data</Title>
+    <Authors>catnapz</Authors>
+    <RepositoryUrl>https://github.com/catnapz/cnc.data</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
